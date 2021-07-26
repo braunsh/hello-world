@@ -1,11 +1,12 @@
+import React from 'react';
 import './App.css';
 import TodoList from './components/TodoList';
 
 function App() {
   return (
-    <main className='container'>
+    <div className="App">
       <TodoList />
-    </main>
+    </div>
   );
 }
 
