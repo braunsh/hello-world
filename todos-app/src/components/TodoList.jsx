@@ -12,7 +12,7 @@ function TodoList() {
         let textToAdd = addTodoText.trim();
         if (textToAdd.length !== 0) {
             let newTodos = [...todos];
-            newTodos[newTodos.length] = { checked: false, text: textToAdd };
+            newTodos.push({ checked: false, text: textToAdd });
             setTodos(newTodos);
             setAddTodoText('');
         }
@@ -69,7 +69,7 @@ function TodoList() {
     return (
         <>
             <h1>TODOs </h1>
-            <input value={addTodoText} onChange={updateNewTodoText} />
+            <input value={addTodoText} onChange={updateNewTodoText} onKeyPress />
             <button className="btn btn-primary btn-sm m-2" onClick={handleAddTodo}>Add </button>
 
             {todos.map((todo, index) => <Todo index={index} {...todo}
