@@ -1,6 +1,9 @@
 import React, { useState } from 'react'
+import styled, { ThemeProvider } from 'styled-components';
 
+import { Input, Button } from './TodoStyles';
 import Todo from "./Todo"
+
 
 interface TodoItem {
     text: string;
@@ -28,9 +31,9 @@ export default function TodoList() {
         setEditMode(false)
     }
 
-
     const updateNewTodoText = (event: React.ChangeEvent<HTMLInputElement>) => {
         setAddTodoText(event.target.value);
+        setEditMode(false);
     }
 
     const setEditMode = (isEnabled: boolean, index = -1) => {
@@ -66,17 +69,38 @@ export default function TodoList() {
 
 
     return (
-        <>
-            <h1>TODOs </h1>
-            <input value={addTodoText} onChange={updateNewTodoText} />
-            <button className="btn btn-primary btn-sm m-2" onClick={handleAddTodo}>Add </button>
+        <ThemeProvider theme={theme}>
+            <Title>TODOs </Title>
+            <Input value={addTodoText} onChange={updateNewTodoText} placeholder="Add new item" />
+            <Button onClick={handleAddTodo}>Add </Button>
 
-            {todos.map((todo, index) => <Todo index={index} {...todo}
+            {todos.map((todo, index) => <Todo
+                key={index}
+                index={index} {...todo}
                 indexOnEdit={indexOnEdit}
                 handleUpdateChecked={handleUpdateChecked}
                 setEditMode={setEditMode}
                 updateTodos={updateTodos} />
             )}
 
-        </>);
+        </ThemeProvider>);
 }
+
+
+
+const theme = {
+    boderColor: "black",
+    color: "black",
+    bgColor: "#448D76"
+}
+
+const Title = styled.h1`
+ padding: 10px;
+ text-align: center;
+ color: #F7D4D6;
+ font-size: 2.5em;
+ background: ${props => props.theme.color};
+ `;
+
+
+

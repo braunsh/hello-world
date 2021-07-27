@@ -1,4 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
+import styled from 'styled-components';
+
+
+import { Input, Button } from "../components/TodoStyles";
 
 interface TabProps {
     index: number;
@@ -13,31 +17,68 @@ interface TabProps {
 
 export default function Todo({ index, indexOnEdit, text, checked, handleUpdateChecked, setEditMode, updateTodos }: TabProps) {
 
+    const [editedText, setEditedText] = useState("");
+
     const enableEditMode = (index: number) => {
         setEditMode(true, index);
+        setEditedText(text);
     }
 
     const handleSaveChanges = (index: number) => {
         setEditMode(false)
+        if (editedText.trim().length !== 0)
+            updateTodos('update', index, editedText);
     }
 
 
     return (
-        <h6 key={index} onDoubleClick={() => enableEditMode(index)} >
+        <TodosContainer key={index} onDoubleClick={() => enableEditMode(index)} >
             {
                 (index === indexOnEdit) ?
                     (
                         <>
-                            <input value={text} onChange={(event: React.ChangeEvent<HTMLInputElement>) => updateTodos('update', index, event.target.value)} />
-                            <button className="btn btn-primary btn-sm m-1" onClick={() => handleSaveChanges(index)}>Save</button>
-                            <button className="btn btn-danger btn-sm m-1" onClick={() => updateTodos('delete', index)}>X</button>
+                            <Input value={editedText} onChange={(event: React.ChangeEvent<HTMLInputElement>) => setEditedText(event.target.value)} />
+                            <SaveButton onClick={() => handleSaveChanges(index)}>Save</SaveButton>
+                            <DeleteButton onClick={() => updateTodos('delete', index)}>Delete</DeleteButton>
                         </>
                     ) : (
-                        <p style={checked ? { textDecorationLine: 'line-through' } : {}}>
+                        <StyledTodo checked={checked}>
                             <input type="checkbox" checked={checked} onChange={event => handleUpdateChecked(index, event.target.checked)} />
-                            {"  "} {text} </p>
+                            {"  "} {text}
+                        </StyledTodo>
                     )
             }
-        </h6>
+        </TodosContainer>
     );
 }
+
+interface ITodoProps {
+    checked?: boolean,
+}
+
+const StyledTodo = styled.section<ITodoProps>`
+${({ checked }) => checked && `
+text-decoration-line: line-through;
+`}
+font-size: 1em;
+padding: 0.25em;
+`;
+
+const TodoButton = styled(Button)`
+border-radius: 20px;
+`;
+
+const SaveButton = styled(TodoButton)`
+background: #448D76;
+`;
+
+const DeleteButton = styled(TodoButton)`
+background: #BE5057;
+`;
+
+const TodosContainer = styled.section`
+max-width: 1000px;
+display: flex;
+margin-left: 50px;
+margin-right: 50px;
+`;
